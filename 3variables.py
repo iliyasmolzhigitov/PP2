@@ -7,7 +7,7 @@ y1 = 10
 print(x1+y1)
 
 x2 = 5
-y2 = 10
+y2 = 10 
 z = x2 + y2
 print(z)
 
