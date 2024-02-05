@@ -25,9 +25,6 @@ class Square(Shape):
     def area(self):
         return self.length ** 2
 
-# Пример использования
-square = Square(4)
-print(square.area())
 
 
 class Rectangle(Shape):
@@ -38,9 +35,6 @@ class Rectangle(Shape):
     def area(self):
         return self.length * self.width
 
-# Пример использования
-rectangle = Rectangle(4, 5)
-print(rectangle.area())
 
 
 class Point:
@@ -58,11 +52,7 @@ class Point:
     def dist(self, other):
         return ((self.x - other.x) ** 2 + (self.y - other.y) ** 2) ** 0.5
 
-# Пример использования
-p1 = Point(0, 0)
-p2 = Point(3, 4)
-p1.show()
-print("Расстояние:", p1.dist(p2))
+
 
 
 class Account:
@@ -71,21 +61,22 @@ class Account:
         self.balance = balance
 
     def deposit(self, amount):
-        self.balance += amount
-        print(f"Баланс пополнен на {amount}. Текущий баланс: {self.balance}")
+        if amount > 0:
+            self.balance += amount
+            print(f"Внесено: {amount}. Баланс: {self.balance}")
+        else:
+            print("Сумма внесения должна быть положительной")
 
     def withdraw(self, amount):
-        if amount > self.balance:
-            print("Недостаточно средств")
-        else:
+        if 0 < amount <= self.balance:
             self.balance -= amount
-            print(f"Снято {amount}. Текущий баланс: {self.balance}")
+            print(f"Снято: {amount}. Баланс: {self.balance}")
+        else:
+            print("Недостаточно средств на балансе")
 
-# Пример использования
-account = Account("Иван", 100)
-account.deposit(50)
-account.withdraw(20)
-account.withdraw(200)
+    def __str__(self):
+        return f"Владелец: {self.owner}\n Баланс: {self.balance}"
+
 
 
 def is_prime(n):
@@ -96,6 +87,4 @@ def is_prime(n):
             return False
     return True
 
-numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 29]
-primes = list(filter(lambda x: is_prime(x), numbers))
-print(primes)
+
