@@ -23,7 +23,7 @@ def filter_prime(numbers):
 
 
 
-from itertools import permutation
+from itertools import permutations
 
 def print_permutations(s):
     for p in permutations(s):

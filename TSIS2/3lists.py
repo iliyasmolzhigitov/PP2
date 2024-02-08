@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 fruits = ["apple", "banana", "cherry"]
 print(fruits[1])
 
@@ -26,9 +26,6 @@ print(len(fruits))
 mylist = ["apple", "banana", "cherry"]
 print(type(mylist))
 
-thislist = list(("apple", "banana", "cherry")) # note the double round-brackets
-print(thislist)
-
 thislist = ["apple", "banana", "cherry", "orange", "kiwi", "melon", "mango"]
 print(thislist[:4])
 
@@ -49,23 +46,6 @@ print(thislist)
 
 thislist = ["apple", "banana", "cherry"]
 thislist[1:3] = ["watermelon"]
-print(thislist)
-
-
-thislist = ["apple", "banana", "cherry"]
-thislist.append("orange")
-print(thislist)
-
-thislist = ["apple", "banana", "cherry"]
-thislist.insert(1, "orange")
-print(thislist)
-
-thislist = ["apple", "banana", "cherry"]
-thislist.remove("banana")
-print(thislist)
-
-thislist = ["apple", "banana", "cherry", "banana", "kiwi"]
-thislist.remove("banana")
 print(thislist)
 
 thislist = ["apple", "banana", "cherry"]
