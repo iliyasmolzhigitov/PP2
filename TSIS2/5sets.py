@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 myset = {"apple", "banana", "cherry"}
 
 thisset = {"apple", "banana", "cherry"}

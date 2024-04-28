@@ -3,7 +3,7 @@ carname = "Volvo"
 x = 50
 
 x1  = 5
-y1 = 10
+y1 = 10 
 print(x1+y1)
 
 x2 = 5

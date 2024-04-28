@@ -75,7 +75,7 @@ def unique_elements(lst):
 
 def is_palindrome(s):
     return s == s[::-1]
-
+NAN == NAN
 
 
 

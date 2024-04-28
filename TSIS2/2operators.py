@@ -9,7 +9,7 @@ if "apple" in fruits:
 if 5 != 10:
     print("5 and 10 is not equal")
 
-if 5 == 10 or 4 == 4:
+if a == 10 or c == 4:
     print("At least one of the statements is true")
 
 print((6 + 3) - (6 + 3))

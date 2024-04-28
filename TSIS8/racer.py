@@ -87,12 +87,10 @@ class Game:
         self.enemy = None
 
     def setUpGameObjects(self):
-        # Setting up Sprites
         self.player = Player()
         self.enemy = Enemy()
         coin = Coin()
 
-        # Creating Sprites Groups
         self.enemies = pygame.sprite.Group()
         self.enemies.add(self.enemy)
         self.neutral = pygame.sprite.Group()
@@ -100,39 +98,28 @@ class Game:
         self.coins = pygame.sprite.Group()
         self.coins.add(coin)
 
-    # used for incrementing score for cars
     def enemyHasPassed(self):
         self.enemies_passed += 1
 
-    # used for incrementing score for collected coins
     def collectCoin(self):
         self.coins_collected += 1
 
     def run(self):
-        # Create a white screen
         self.DISPLAYSURF = pygame.display.set_mode((400, 600))
         self.DISPLAYSURF.fill(self.WHITE)
         pygame.display.set_caption("Game")
-
-        # Adding a new User event
         INC_SPEED = pygame.USEREVENT + 1
         pygame.time.set_timer(INC_SPEED, 1000)
-
-        # Setting up Fonts
         font = pygame.font.SysFont("Verdana", 60)
         font_small = pygame.font.SysFont("Verdana", 20)
         game_over = font.render("Game Over", True, self.BLACK)
 
-        # road
         background = pygame.image.load("racer.smth/AnimatedStreet.png")
 
-        # Setting up FPS
         FramePerSec = pygame.time.Clock()
 
-        # Game Loop
         while True:
 
-            # Cycles through all events occurring
             for event in pygame.event.get():
                 if event.type == INC_SPEED:
                     self.SPEED += 0.5
@@ -147,7 +134,6 @@ class Game:
             coins_collected = font_small.render(f"Coins: {self.coins_collected}", True, self.BLACK)
             self.DISPLAYSURF.blit(coins_collected, (SCREEN_WIDTH - 100, 10))
 
-            # Moves and Re-draws all Sprites
             for e in self.enemies:
                 self.DISPLAYSURF.blit(e.image, e.rect)
                 e.move(self.SPEED, lambda: self.enemyHasPassed())
@@ -160,7 +146,6 @@ class Game:
                 self.DISPLAYSURF.blit(c.image, c.rect)
                 c.move(self.enemy.center, self.SPEED)
 
-            # To be run if collision occurs between Player and Enemy
             if pygame.sprite.spritecollideany(self.player, self.enemies):
                 pygame.mixer.Sound('racer.smth/crash.wav').play()
                 time.sleep(0.5)
@@ -174,7 +159,6 @@ class Game:
                 time.sleep(2)
                 pygame.quit()
                 sys.exit()
-            # To be run if collision occurs between Player and Coin
             if pygame.sprite.spritecollideany(self.player, self.coins):
                 self.collectCoin()
                 for c in self.coins:

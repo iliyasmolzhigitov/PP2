@@ -62,7 +62,7 @@ class Account:
 
     def deposit(self, amount):
         if amount > 0:
-            self.balance += amount
+            self.balance += amount  
             print(f"Внесено: {amount}. Баланс: {self.balance}")
         else:
             print("Сумма внесения должна быть положительной")

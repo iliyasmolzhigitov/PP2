@@ -8,8 +8,8 @@ clock = pygame.time.Clock()
 FPS = 50
 done = False
 n = 0
-musics = ['music/boom.mp3', 'music/incoming.mp3', 'music/crisis.mp3', 'music/hymnfortheweekend.mp3', 'music/afterdarkxsweatherweather.mp3']
-plays = ['boom.png', 'incoming.png', 'crisis.png', 'hymnfortheweekend.png', 'afterdark.png']
+musics = ['music/incoming.mp3', 'music/afterdarkxsweatherweather.mp3']
+plays = ['incoming.png', 'afterdark.png']
 pause = 'pause.png'
 play = 'play-buttton.png'
 rewind_button = 'rewind-button.png'
@@ -17,11 +17,10 @@ forward_button = 'forward-button.png'
 
 def start(n):
     
-    # Loading nth audio file into our player
     mixer.music.load(musics[n])
       
     mixer.music.set_volume(0.2)
-    # Playing our music
+
     mixer.music.play()
 
 start(n)
@@ -53,7 +52,6 @@ while not done:
                 screen.blit(pygame.image.load(play), (380, 650))
                 screen.blit(pygame.image.load(rewind_button), (350, 650))
                 screen.blit(pygame.image.load(forward_button), (410, 650))
-            # b = 0
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
             if n == 4: n = 0
             else: n += 1
@@ -75,5 +73,4 @@ while not done:
   
     pygame.display.flip()
     clock.tick(FPS)
-# start(0)
 pygame.quit()

@@ -29,7 +29,6 @@ class GameObject:
 class Snake(GameObject):
     def __init__(self):
 
-        # head of the snake is at body[0]
         self.body = [Vector2(6, 5), Vector2(5, 5), Vector2(4, 5)]
         self.direction = Direction.RIGHT
 
@@ -44,7 +43,7 @@ class Snake(GameObject):
 
     def move(self):
         copy = self.body[:-1]
-        copy.insert(0, self.body[0] + self.direction)  # first block of body becomes head, move head
+        copy.insert(0, self.body[0] + self.direction) 
         self.body = copy
 
     def get_pos(self) -> tuple[float, float]:
@@ -52,7 +51,7 @@ class Snake(GameObject):
 
     def extend(self):
         copy = self.body[:]
-        copy.insert(0, self.body[0] + self.direction)  # first block of body becomes head, move head
+        copy.insert(0, self.body[0] + self.direction) 
         self.body = copy
 
 
@@ -102,13 +101,11 @@ class Game:
 
     def checkForFail(self):
         head = self.snake.get_pos()
-        # check for the wall
         if not (0 <= head[0] < self.playb.cell_num):
             self.gameOver = True
         if not (0 <= head[1] < self.playb.cell_num):
             self.gameOver = True
 
-        # check if we hit outselves
         for block in self.snake.body[1:]:
             if block == self.snake.body[0]:
                 self.gameOver = True
@@ -181,7 +178,6 @@ class Game:
                 if event.type == MOVEMENT:
                     self.snake.move()
 
-                # update movement
                 if event.type == pygame.KEYDOWN and not self.gameOver:
                     if event.key == pygame.K_UP and self.snake.direction is not Direction.DOWN:
                         self.snake.direction = Direction.UP
@@ -191,7 +187,6 @@ class Game:
                         self.snake.direction = Direction.LEFT
                     if event.key == pygame.K_RIGHT and self.snake.direction is not Direction.LEFT:
                         self.snake.direction = Direction.RIGHT
-                # restart the game
                 if event.type == pygame.MOUSEBUTTONUP and self.gameOver and restartBtn is not None:
                     pos = pygame.mouse.get_pos()
                     if restartBtn.collidepoint(pos):
