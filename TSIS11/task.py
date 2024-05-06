@@ -1,110 +1,86 @@
-import psycopg2 as pgsql
+import psycopg2
+import csv
+from tabulate import tabulate 
 
-connection = pgsql.connect(host="localhost", dbname="postgres", user="postgres", 
-                         password="mumbik112233", port=5433)
-cur = connection.cursor()
+conn = psycopg2.connect(host="localhost", dbname="postgres", user="postgres",
+                        password="mumbik112233", port=5433)
 
-cur.execute("""CREATE OR REPLACE FUNCTION search_from_pb_byname(a character varying)
-  RETURNS SETOF PhoneBook
-AS
-$$
-SELECT * 
-FROM PhoneBook 
-WHERE first_name=a;
-$$
-language sql;
+cur = conn.cursor()
+
+cur.execute("""CREATE TABLE IF NOT EXISTS Phonebook2 (
+      user_id SERIAL PRIMARY KEY,
+      last_name VARCHAR(255) NOT NULL,
+      first_name VARCHAR(255) NOT NULL, 
+      phone_number VARCHAR(255) NOT NULL
+)
 """)
 
+def insert_data():
+    print('Type "csv" or "con" to choose option between uploading csv file or typing from console: ')
+    method = input().lower()
+    if method == "con":
+        last_name = input("last_name: ")
+        first_name = input("first_name: ")
+        phone_number = input("phone_number: ")
+        cur.execute("INSERT INTO Phonebook2 (last_name, first_name, phone_number) VALUES (%s, %s, %s)", (last_name, first_name, phone_number))
+    elif method == "csv":
+        filepath = input("Enter a file path with proper extension: ")
+        with open(filepath, 'r') as f:
+            reader = csv.reader(f)
+            next(reader)  
+            for row in reader:
+                cur.execute("INSERT INTO Phonebook2 (last_name, first_name, phone_number) VALUES (%s, %s, %s)", tuple(row))
 
+def update_data():
+    column = input('Type the name of the column that you want to change: ')
+    value = input(f"Enter {column} that you want to change: ")
+    new_value = input(f"Enter the new {column}: ")
+    cur.execute(f"UPDATE Phonebook2 SET {column} = %s WHERE {column} = %s", (new_value, value))
+    conn.commit()
 
+def delete_data():
+    phone_number = input('Type phone number which you want to delete: ')
+    cur.execute("DELETE FROM Phonebook2 WHERE phone_number = %s", (phone_number,))
+    conn.commit()
+    
+def query_data():
+    column = input("Type the name of the column which will be used for searching data: ")
+    value = input(f"Type {column} of the user: ")
+    cur.execute(f"SELECT * FROM Phonebook2 WHERE {column} = %s", (value,))
+    rows = cur.fetchall()
+    print(tabulate(rows, headers=["ID", "last_name", "first_name", "phone_number"]))
 
+def display_data():
+    cur.execute("SELECT * from Phonebook2;")
+    rows = cur.fetchall()
+    print(tabulate(rows, headers=["ID", "last_name", "first_name", "phone_number"], tablefmt='fancy_grid'))
 
-cur.execute("""CREATE OR REPLACE PROCEDURE insert_to_pb(a character varying, b character varying, c integer)
-LANGUAGE plpgsql
-AS $$
-DECLARE v_exists INTEGER;
-BEGIN
-    SELECT into v_exists (SELECT count(*) FROM public.PhoneBook WHERE first_name = b AND last_name=a);
-    IF v_exists=0 THEN
-        INSERT INTO public.PhoneBook (last_name, first_name, phone_number) values(a, b, c);
-    END IF;
-	IF v_exists IS NOT NULL THEN
-        UPDATE public.PhoneBook
-		SET phone_number = c
-		WHERE last_name = a AND first_name=b;
-    END IF;
-END;
-$$;
-""")
+while True:
+    print("""
+    List of the commands:
+    1. Type "i" to INSERT
+    2. Type "u" to UPDATE
+    3. Type "q" to make specific QUERY 
+    4. Type "d" to DELETE 
+    5. Type "s" to see the values 
+    6. Type "f" to close the program.
+    """)
 
+    command = input().lower()
 
+    if command == "i":
+        insert_data()
+    elif command == "u":
+        update_data()
+    elif command == "d":
+        delete_data()
+    elif command == "q":
+        query_data()
+    elif command == "s":
+        display_data()
+    elif command == "f":
+        break
 
-
-cur.execute("""CREATE OR REPLACE PROCEDURE insert_loop()
-LANGUAGE plpgsql
-AS $$
-DECLARE
-   m   text[];
-   num int;
-   arr text[] := '{{Muhammed, Ali, 123456789},{Bruce, Lee, 12312346465}}'; 
-BEGIN
-   FOREACH m SLICE 1 IN ARRAY arr
-   LOOP
-      SELECT INTO num CAST(m[3] AS INTEGER);
-      INSERT INTO PhoneBook (last_name, first_name, phone_number) values(m[1],m[2],num);
-   END LOOP;
-END
-$$;""")
-
-
-
-
-cur.execute("""CREATE OR REPLACE FUNCTION paginating(a integer, b integer)
-RETURNS SETOF PhoneBook
-AS $$
-    SELECT * FROM PhoneBook 
-	ORDER BY last_name
-	LIMIT a OFFSET b;
-$$
-language sql;""")
-
-
-
-
-
-
-cur.execute("""CREATE OR REPLACE PROCEDURE delete_from_pb(a character varying, b character varying)
-LANGUAGE plpgsql
-AS $$
-DECLARE v_exists INTEGER;
-BEGIN
-    SELECT into v_exists (SELECT count(*) FROM public.PhoneBook WHERE first_name = b AND last_name=a);
-	IF v_exists IS NOT NULL THEN
-        DELETE FROM PhoneBook
-		WHERE last_name=a AND first_name=b;
-    END IF;
-END;
-$$;""")
-
-
-
-
-
-
-
-cur.execute("""CALL insert_to_pb('Mike','Tyson',465465654);
-""")
-cur.execute("""SELECT *
-FROM search_from_pb_byname('lol');""")
-print(cur.fetchall())
-cur.execute("""CALL insert_to_pb('pip', 'pup', 66);""")
-cur.execute("""SELECT *
-FROM paginating(5, 2);""")
-print(cur.fetchall())
-cur.execute("""CALL delete_from_pb('Mike', 'Tyson');""")
-cur.execute("""CALL insert_loop();""")
-
-
-connection.commit()
+conn.commit()
 cur.close()
-connection.close()
+conn.close()
